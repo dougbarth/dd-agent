@@ -244,15 +244,18 @@ class TestElastic(AgentCheckTest):
             expected_metrics.update(ADDITIONAL_METRICS_PRE_0_90_5)
             expected_metrics.update(JVM_METRICS_PRE_0_90_10)
 
+        # Boolean at the end represents whether or not the context is
+        # "external" - ie. 'Cluster Stats' : True
         contexts = [
-            (conf_hostname, default_tags + tags),
-            (socket.gethostname(), default_tags)
+            (conf_hostname, default_tags + tags, False),
+            (socket.gethostname(), default_tags, True)
         ]
 
         for m_name, desc in expected_metrics.iteritems():
-            for hostname, m_tags in contexts:
-                if (m_name in CLUSTER_HEALTH_METRICS
-                        and hostname == socket.gethostname()):
+            for hostname, m_tags, external in contexts:
+
+                if external:
+                    m_tags = default_tags + ['elasticsearch_host:'+hostname]
                     hostname = conf_hostname
 
                 if desc[0] == "gauge":

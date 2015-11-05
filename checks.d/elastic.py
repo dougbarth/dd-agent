@@ -427,7 +427,7 @@ class ESCheck(AgentCheck):
 
             cluster_tags = config.tags
             if metric_hostname:
-                cluster_tags.append("elasticsearch_hostn:"+metric_hostname)
+                cluster_tags.append("elasticsearch_host:"+metric_hostname)
 
             for metric, desc in stats_metrics.iteritems():
                 self._process_metric(
