@@ -434,14 +434,11 @@ class ESCheck(AgentCheck):
             cluster_tags = config.tags
             if metric_hostname and cluster_hosts_as_tags:
                 cluster_tags.append("elasticsearch_host:"+metric_hostname)
+                metric_hostname = None
 
             for metric, desc in stats_metrics.iteritems():
-                if not cluster_hosts_as_tags:
-                    self._process_metric(
-                        node_data, metric, *desc, tags=cluster_tags, hostname=metric_hostname)
-                else:
-                    self._process_metric(
-                        node_data, metric, *desc, tags=cluster_tags)
+                self._process_metric(
+                    node_data, metric, *desc, tags=cluster_tags, hostname=metric_hostname)
 
     def _process_pshard_stats_data(self, data, config, pshard_stats_metrics):
         for metric, desc in pshard_stats_metrics.iteritems():
